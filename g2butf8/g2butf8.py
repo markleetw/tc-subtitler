@@ -153,7 +153,7 @@ def myproc(file_or_dir, extension, recursive):
 if __name__ == "__main__":
     # 主程序
     config = ConfigParser.ConfigParser()
-    config.read(os.path.dirname(os.path.abspath(__file__)) + './g2butf8.cfg')
+    config.read(os.path.dirname(os.path.abspath(__file__)) + '/g2butf8.cfg')
     backup = config.getboolean('config', 'backup')
     use_bom = config.getboolean('config', 'use_bom')
     convertType = config.get('config', 'convert')
