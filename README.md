@@ -1,4 +1,4 @@
-﻿#Shooter Subtitle Downloader
+﻿#ZH-TW Subtitle Downloader
 此程式可能透過 [射手網](http://www.shooter.cn/) 的 API 下載電影的中文字幕，並轉換成繁體中文。
 
 獲取最新的Python版本：[http://www.python.org/getit/](https://www.python.org/getit/)
