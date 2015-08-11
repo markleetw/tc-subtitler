@@ -106,7 +106,7 @@ def sub_downloader(path):
             subtitle_file.write(response)
         # 簡轉繁
         os.system('python ' + os.path.dirname(os.path.abspath(__file__)) +
-                  '/g2butf8/g2buft8.py ' + srt_file_name)
+                  '/g2butf8/g2butf8.py ' + srt_file_name)
 
 
 # 重新命名資料夾，避免出現[]及()，glob會抓不到內容
