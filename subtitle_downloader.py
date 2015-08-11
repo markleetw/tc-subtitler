@@ -6,6 +6,10 @@ import math
 import urllib2
 import re
 
+# 未來希望能夠加入其他網站的搜尋功能
+# http://www.opensubtitles.org/zh
+# http://www.zimuku.net/
+
 extensions = (".avi", ".mp4", ".mkv", ".mpg", ".mpeg", ".mov", ".rm", ".vob", ".wmv", ".flv", ".3gp")
 dir_path = '/var/lib/transmission/Downloads/'
 
@@ -79,9 +83,7 @@ def sub_downloader(path):
             print 'shooter api timeout, retry...'
             done = False
 
-    # 找不到字幕，未來希望能夠加入其他網站的搜尋功能
-    # http://www.opensubtitles.org/zh
-    # http://www.zimuku.net/
+    # 找不到字幕
     if response == '\xff' or response == '0xff(-1)':
         return None
 
