@@ -8,7 +8,7 @@
 
 ###用法:
 指定目標資料夾，程式將會去抓取此目錄下及其子目錄下所有影片檔的字幕，並將字幕轉換為繁體中文，並保留簡體中文字幕檔
-(因為很不幸地，有時候原始檔編碼本身就有問題，導致轉檔後可能產生不可修復的字幕檔，所以備份原始的簡體字幕檔，讓使用者自行決定該如何處理)
+######(因為很不幸地，有時候原始檔編碼本身就有問題，導致轉檔後可能產生不可修復的字幕檔，所以備份原始的簡體字幕檔，讓使用者自行決定該如何處理)
 
 ###感謝:
-感謝[ttchin](https://github.com/ttchin/shooter-subtitle-downloader) 以及 [chinese-autoconvert](https://code.google.com/p/chinese-autoconvert/)
+感謝 [ttchin](https://github.com/ttchin/shooter-subtitle-downloader) 以及 [chinese-autoconvert](https://code.google.com/p/chinese-autoconvert/)
