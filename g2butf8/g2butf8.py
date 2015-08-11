@@ -9,17 +9,18 @@ from glob import glob
 import ConfigParser
 from jianfan import jtof
 # http://code.google.com/p/python-jianfan/
-#import chardet
+# import chardet
 from chardet.universaldetector import UniversalDetector
 # http://chardet.feedparser.org
 from dic_tw import dic_tw
 import argparse
 
 
-#global variables
+# global variables
 convertType = "g2bdic"
 use_bom = True
 backup = True
+
 
 # 最大正向匹配
 def convertVocabulary(string_in, dic):
@@ -34,6 +35,7 @@ def convertVocabulary(string_in, dic):
         i += 1
     return string_in
 
+
 def getEncoding(filename):
     fp = open(filename, 'r')
     orig_content = fp.read()
@@ -43,20 +45,23 @@ def getEncoding(filename):
     fp.close()
     return detector.result["encoding"]
 
+
 def getEncodingByContent(content):
     detector = UniversalDetector()
     detector.feed(content)
     detector.close()
     return detector.result["encoding"]
 
+
 # start error message
-#MSG_USAGE = u"使用方法： g2butf8 [filename] 會自動偵測編碼，再轉換成有BOM的UTF-8"
+# MSG_USAGE = u"使用方法： g2butf8 [filename] 會自動偵測編碼，再轉換成有BOM的UTF-8"
 MSG_TEXT_FILE_NOT_FOUND = u"錯誤 - 檔案找不到："
 MSG_CONVERT_FINISH = u"轉換成功！\n"
 MSG_NO_CONVERT = u"檔案長度為零，不做轉換\n"
 # end of error message
 
 dir_separator = os.path.sep
+
 
 def convertDirectory(directory, extension, recursive):
     files = os.listdir(directory)
@@ -79,6 +84,7 @@ def convertDirectory(directory, extension, recursive):
             else:
                 print "檔案不存在! File not found"
 
+
 def convertFile(target_file):
     if os.path.isfile(target_file):
         f_encoding = getEncoding(target_file)
@@ -89,7 +95,8 @@ def convertFile(target_file):
             if os.path.getsize(target_file) > 0:
                 if backup:
                     # do backup
-                    backup_file = target_file + '.bak'
+                    filename, file_extension = os.path.splitext(target_file)
+                    backup_file = filename + '.bak' + file_extension
                     shutil.copy2(target_file, backup_file)
 
                 result_content = u''
@@ -109,7 +116,7 @@ def convertFile(target_file):
 
                 origlines = newcontent.splitlines(True)
                 fpw = open(target_file, 'w')
-                if(use_bom):
+                if (use_bom):
                     if not newcontent.startswith(codecs.BOM_UTF8.decode("utf8")):
                         fpw.write(codecs.BOM_UTF8)
                 for line in origlines:
@@ -117,14 +124,15 @@ def convertFile(target_file):
                         fpw.write(convertVocabulary(line, dic_tw()).encode('UTF-8'))
                     else:
                         fpw.write(line.encode('UTF-8'))
-                #fpw.write(newcontent.encode('UTF-8'))
+                # fpw.write(newcontent.encode('UTF-8'))
                 fpw.close()
 
                 print (MSG_CONVERT_FINISH)
             else:
                 print MSG_NO_CONVERT
     else:
-        print "File not found! "+target_file+" 檔案不存在! "
+        print "File not found! " + target_file + " 檔案不存在! "
+
 
 def myproc(file_or_dir, extension, recursive):
     if os.path.isdir(file_or_dir):
@@ -143,9 +151,9 @@ def myproc(file_or_dir, extension, recursive):
 
 
 if __name__ == "__main__":
-    #主程序
+    # 主程序
     config = ConfigParser.ConfigParser()
-    config.read('g2butf8.cfg')
+    config.read(os.path.dirname(os.path.abspath(__file__)) + './g2butf8.cfg')
     backup = config.getboolean('config', 'backup')
     use_bom = config.getboolean('config', 'use_bom')
     convertType = config.get('config', 'convert')
@@ -154,18 +162,18 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--recursive', action="store_true", help='包含子目錄(預設不包括)')
-    #parser.add_argument('-b', '--backup', action="store_true", help='產生.bak備份檔')
-    parser.add_argument('-nb', '--nobackup',  action="store_true", help='不要產生.bak備份檔 (預設有)')
-    parser.add_argument('-nobom', '--nobom',  action="store_true", help='不要產生BOM標題 (預設有)')
+    # parser.add_argument('-b', '--backup', action="store_true", help='產生.bak備份檔')
+    parser.add_argument('-nb', '--nobackup', action="store_true", help='不要產生.bak備份檔 (預設有)')
+    parser.add_argument('-nobom', '--nobom', action="store_true", help='不要產生BOM標題 (預設有)')
     parser.add_argument('-x', metavar='extension', type=str, nargs='+', help='副檔名, (預設為所有檔案)')
     parser.add_argument('-t', "--type", metavar='type', type=str, nargs=1, help='轉換方式: g2b 簡轉繁 g2bdic 簡轉繁再加上詞彙轉換')
     parser.add_argument('files', metavar='files', type=str, nargs='+',
-                   help='會自動偵測編碼，再轉換成有BOM的UTF-8')
+                        help='會自動偵測編碼，再轉換成有BOM的UTF-8')
     argc = len(sys.argv)
 
     if argc == 1:
         parser.print_help()
-        #sys.exit(MSG_USAGE);
+        # sys.exit(MSG_USAGE);
         exit()
 
     # end of parse parameters.
@@ -187,5 +195,3 @@ if __name__ == "__main__":
                 myproc(bfile, args.x, args.recursive)
         else:
             myproc(afile, args.x, args.recursive)
-
-
