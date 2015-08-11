@@ -106,8 +106,11 @@ def sub_downloader(path):
 # 重新命名資料夾，避免出現[]及()，glob會抓不到內容
 for filename in os.listdir(dir_path):
     if re.match('^[A-Za-z0-9_.]+$', filename) is None:  # 只可包含英文大小寫及dot
-        print 'rename from', filename, 'to', re.sub('[^0-9a-zA-Z]+', '.', filename)
-        os.rename(os.path.join(dir_path, filename), os.path.join(dir_path, re.sub('[^0-9a-zA-Z]+', '.', filename)))
+        new_filename = re.sub('[^0-9a-zA-Z]+', '.', filename)
+        if new_filename[-1] == '.':  # 有可能以 '.' 為結尾，修改它
+            new_filename = new_filename[:-1]
+        print 'rename from', filename, 'to', new_filename
+        os.rename(os.path.join(dir_path, filename), os.path.join(dir_path, new_filename))
 
 for root, subFolders, files in os.walk(dir_path):
     print 'now in folder:', root
