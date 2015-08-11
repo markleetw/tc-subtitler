@@ -57,16 +57,17 @@ def get_hash(name):
 
 def sub_downloader(path):
     hash_val = get_hash(path)
-    name = path.split('\\')[-1]
+    name = path.split('\\')[-1].split('/')[-1]  # 為了安全性著想不傳送完整路徑，只給檔名
     replace = extensions
     for content in replace:
         path = path.replace(content, "")
-    headers = {'User-Agent': 'SubDB/1.0 (subtitle-downloader/1.0; http://github.com/manojmj92/subtitle-downloader)'}
+    headers = {'User-Agent': 'SubDB/1.0 (shooter-subtitle-downloader/1.0; '
+                             'http://github.com/marksylee/shooter-subtitle-downloader)'}
 
     # step 1. find subtitle list
     filehash = hash_val[0] + '%3B' + hash_val[1] + '%3B' + hash_val[2] + '%3B' + hash_val[3]
     url = 'http://www.shooter.cn/api/subapi.php?filehash=' + filehash + '&format=json&pathinfo=' + name + '&lang=Chn'
-    print 'list url:', url
+    print 'get list url:', url
     req = urllib2.Request(url, '', headers)
     done = False
     response = None
@@ -75,13 +76,21 @@ def sub_downloader(path):
             response = urllib2.urlopen(req).read()
             done = True
         except:
+            print 'shooter api timeout, retry...'
             done = False
+
+    # 找不到字幕，未來希望能夠加入其他網站的搜尋功能
+    # http://www.opensubtitles.org/zh
+    # http://www.zimuku.net/
+    if response == '\xff' or response == '0xff(-1)':
+        return None
+
     # step 2. get first 5 subtitle from subtitle list
     for index, res in enumerate(eval(response)):
-        if index < 5:
+        if index < 5:  # 經過測試，射手 api 似乎只會回傳三筆字幕檔，但還是以防萬一限制一下上限
             subtitle = res['Files']
             url = subtitle[0]['Link'].replace('\u0026', '&')
-            print 'download url:', url
+            print 'download file url:', url
             req = urllib2.Request(url, '', headers)
             done = False
             while not done:
@@ -101,10 +110,12 @@ for filename in os.listdir(dir_path):
         os.rename(os.path.join(dir_path, filename), os.path.join(dir_path, re.sub('[^0-9a-zA-Z]+', '.', filename)))
 
 for root, subFolders, files in os.walk(dir_path):
-    print 'in folder:', root
+    print 'now in folder:', root
     print 'num of srt files:', len(glob.glob(os.path.join(root, '*.srt')))
+    # 檢查同資料夾底下是否已存在超過一個字幕檔 (因為可能有原生字幕檔)
+    # 如果有超過一個字幕檔表示已經下載過，就可以直接跳過
     if len(glob.glob(os.path.join(root, '*.srt'))) <= 1:
         for ext in extensions:
             for f in glob.glob(os.path.join(root, '*' + ext)):
-                print 'file:', f
+                print 'video file:', f
                 sub_downloader(f)
