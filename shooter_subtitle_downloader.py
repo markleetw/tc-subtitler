@@ -99,8 +99,12 @@ def sub_downloader(path):
                     done = True
                 except:
                     done = False
-        with open(path + '-' + str(index) + ".zh.srt", "wb") as subtitle_file:
+        srt_file_name = path + '-' + str(index) + ".zh.srt"
+        with open(srt_file_name, "wb") as subtitle_file:
             subtitle_file.write(response)
+        # 簡轉繁
+        os.system('python ' + os.path.dirname(os.path.abspath(__file__)) +
+                  '/g2butf8/g2buft8.py ' + srt_file_name)
 
 
 # 重新命名資料夾，避免出現[]及()，glob會抓不到內容
