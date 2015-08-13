@@ -104,6 +104,8 @@ def sub_downloader(path):
         srt_file_name = path + '-' + str(index) + ".zh.srt"
         with open(srt_file_name, "wb") as subtitle_file:
             subtitle_file.write(response)
+            subtitle_file.close()
+            os.chmod(subtitle_file.name, 0777)
         # 簡轉繁
         os.system('python ' + os.path.dirname(os.path.abspath(__file__)) +
                   '/g2butf8/g2butf8.py ' + srt_file_name)
