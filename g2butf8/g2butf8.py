@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 
-import sys
+# import sys
 import os
 import codecs
 import shutil
-from glob import glob
+# from glob import glob
 import ConfigParser
 from jianfan import jtof
 # http://code.google.com/p/python-jianfan/
@@ -150,48 +150,59 @@ def myproc(file_or_dir, extension, recursive):
                 convertFile(file_or_dir)
 
 
-if __name__ == "__main__":
-    # 主程序
+def translate(file_path):
     config = ConfigParser.ConfigParser()
     config.read(os.path.dirname(os.path.abspath(__file__)) + '/g2butf8.cfg')
+    global backup, use_bom, convertType, recursive
     backup = config.getboolean('config', 'backup')
     use_bom = config.getboolean('config', 'use_bom')
     convertType = config.get('config', 'convert')
-
-    # start parse parameters
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-r', '--recursive', action="store_true", help='包含子目錄(預設不包括)')
-    # parser.add_argument('-b', '--backup', action="store_true", help='產生.bak備份檔')
-    parser.add_argument('-nb', '--nobackup', action="store_true", help='不要產生.bak備份檔 (預設有)')
-    parser.add_argument('-nobom', '--nobom', action="store_true", help='不要產生BOM標題 (預設有)')
-    parser.add_argument('-x', metavar='extension', type=str, nargs='+', help='副檔名, (預設為所有檔案)')
-    parser.add_argument('-t', "--type", metavar='type', type=str, nargs=1, help='轉換方式: g2b 簡轉繁 g2bdic 簡轉繁再加上詞彙轉換')
-    parser.add_argument('files', metavar='files', type=str, nargs='+',
-                        help='會自動偵測編碼，再轉換成有BOM的UTF-8')
-    argc = len(sys.argv)
-
-    if argc == 1:
-        parser.print_help()
-        # sys.exit(MSG_USAGE);
-        exit()
-
-    # end of parse parameters.
-    args = parser.parse_args()
     recursive = False
+    myproc(file_path, None, None)
 
-    if args.nobackup:
-        backup = False
-    if args.type is not None:
-        convertType = args.type[0]
-    if args.nobom is not None:
-        use_bom = False
-
-    filelist = args.files
-    for afile in filelist:
-        if '*' in afile:
-            aflist = glob(afile)
-            for bfile in aflist:
-                myproc(bfile, args.x, args.recursive)
-        else:
-            myproc(afile, args.x, args.recursive)
+#
+# if __name__ == "__main__":
+#     # 主程序
+#     config = ConfigParser.ConfigParser()
+#     config.read(os.path.dirname(os.path.abspath(__file__)) + '/g2butf8.cfg')
+#     backup = config.getboolean('config', 'backup')
+#     use_bom = config.getboolean('config', 'use_bom')
+#     convertType = config.get('config', 'convert')
+#
+#     # start parse parameters
+#
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument('-r', '--recursive', action="store_true", help='包含子目錄(預設不包括)')
+#     # parser.add_argument('-b', '--backup', action="store_true", help='產生.bak備份檔')
+#     parser.add_argument('-nb', '--nobackup', action="store_true", help='不要產生.bak備份檔 (預設有)')
+#     parser.add_argument('-nobom', '--nobom', action="store_true", help='不要產生BOM標題 (預設有)')
+#     parser.add_argument('-x', metavar='extension', type=str, nargs='+', help='副檔名, (預設為所有檔案)')
+#     parser.add_argument('-t', "--type", metavar='type', type=str, nargs=1, help='轉換方式: g2b 簡轉繁 g2bdic 簡轉繁再加上詞彙轉換')
+#     parser.add_argument('files', metavar='files', type=str, nargs='+',
+#                         help='會自動偵測編碼，再轉換成有BOM的UTF-8')
+#     argc = len(sys.argv)
+#
+#     if argc == 1:
+#         parser.print_help()
+#         # sys.exit(MSG_USAGE);
+#         exit()
+#
+#     # end of parse parameters.
+#     args = parser.parse_args()
+#     recursive = False
+#
+#     if args.nobackup:
+#         backup = False
+#     if args.type is not None:
+#         convertType = args.type[0]
+#     if args.nobom is not None:
+#         use_bom = False
+#
+#     filelist = args.files
+#     for afile in filelist:
+#         if '*' in afile:
+#             aflist = glob(afile)
+#             for bfile in aflist:
+#                 myproc(bfile, args.x, args.recursive)
+#         else:
+#             myproc(afile, args.x, args.recursive)

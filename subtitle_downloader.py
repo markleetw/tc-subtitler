@@ -5,6 +5,7 @@ import hashlib
 import math
 import urllib2
 import re
+from g2butf8 import g2butf8
 
 # 未來希望能夠加入其他網站的搜尋功能
 # http://www.opensubtitles.org/zh
@@ -107,8 +108,7 @@ def sub_downloader(path):
             subtitle_file.close()
             os.chmod(subtitle_file.name, 0777)
         # 簡轉繁
-        os.system('python ' + os.path.dirname(os.path.abspath(__file__)) +
-                  '/g2butf8/g2butf8.py ' + srt_file_name)
+        g2butf8.translate(srt_file_name)
 
 
 # 重新命名資料夾，避免出現[]及()，glob會抓不到內容
