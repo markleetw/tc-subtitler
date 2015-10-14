@@ -5,17 +5,20 @@ import hashlib
 import math
 import urllib2
 import re
+import sys
 from g2butf8 import g2butf8
 
 # 未來希望能夠加入其他網站的搜尋功能
 # http://www.opensubtitles.org/zh
 # http://www.zimuku.net/
 
-extensions = (".avi", ".mp4", ".mkv", ".mpg", ".mpeg", ".mov", ".rm", ".vob", ".wmv", ".flv", ".3gp")
 dir_path = '/var/lib/transmission/Downloads/'
-
-
 # dir_path = 'D:\\video\\movies\\test'
+
+if len(sys.argv) > 1:
+    dir_path = sys.argv[1]
+
+extensions = (".avi", ".mp4", ".mkv", ".mpg", ".mpeg", ".mov", ".rm", ".vob", ".wmv", ".flv", ".3gp")
 
 
 def get_hash(name):
